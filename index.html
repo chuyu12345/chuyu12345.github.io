@@ -9,7 +9,7 @@
         :root {
             --primary: #70a1ff;
             --primary-dark: #5c8eff;
-            --card-bg: rgba(255, 255, 255, 0.7);  /* 降低不透明度到0.7 */
+            --card-bg: rgba(255, 255, 255, 0.7);
         }
 
         body {
@@ -24,7 +24,7 @@
             position: relative;
             line-height: 1.6;
             background: url('https://img.picui.cn/free/2025/04/13/67fa9da69239a.png') center/cover no-repeat;
-            backdrop-filter: blur(1px);  /* 降低全局背景模糊度 */
+            backdrop-filter: blur(1px);
         }
 
         .profile-card {
@@ -37,10 +37,9 @@
             width: 90%;
             margin: 20px;
             transition: transform 0.3s ease;
-            backdrop-filter: blur(3px);  /* 新增卡片局部模糊 */
+            backdrop-filter: blur(3px);
         }
 
-        /* 保持其他所有样式不变 */
         .language-switcher {
             position: absolute;
             top: 30px;
@@ -167,7 +166,7 @@
             .profile-card {
                 padding: 25px;
                 width: 95%;
-                backdrop-filter: blur(2px);  /* 移动端降低模糊度 */
+                backdrop-filter: blur(2px);
             }
 
             .profile-img {
@@ -205,7 +204,6 @@
     </style>
 </head>
 <body>
-    <!-- 保持原有HTML结构 -->
     <div class="language-switcher">
         <button class="styled-btn" id="langToggle">EN</button>
     </div>
@@ -237,8 +235,8 @@
     </div>
     
     <script>
-        // 保持原有JavaScript功能不变
-        let isEnglish = true;
+        // 修复核心：初始化状态管理
+        let isEnglish = false; // 初始状态设为中文
         
         const translations = {
             zh: {
@@ -247,7 +245,7 @@
                 searchPlaceholder: "输入搜索内容...",
                 refreshBtn: "⟳ 刷新页面",
                 timePrefix: "当前时间: ",
-                langBtn: "中文"
+                langBtn: "EN"
             },
             en: {
                 title: "Welcome to My Space",
@@ -255,24 +253,34 @@
                 searchPlaceholder: "Search the web...",
                 refreshBtn: "⟳ Refresh",
                 timePrefix: "Current Time: ",
-                langBtn: "EN"
+                langBtn: "中文"
             }
         };
 
-        function toggleLanguage() {
-            isEnglish = !isEnglish;
+        // 初始化函数
+        function initLanguage() {
             const lang = isEnglish ? 'en' : 'zh';
-            
             document.getElementById('mainTitle').textContent = translations[lang].title;
             document.getElementById('subTitle').textContent = translations[lang].subtitle;
             document.getElementById('searchInput').placeholder = translations[lang].searchPlaceholder;
             document.getElementById('refreshBtn').innerHTML = `<span>⟳</span> ${translations[lang].refreshBtn.split(' ')[1]}`;
             document.getElementById('langToggle').textContent = translations[lang].langBtn;
-            updateTime();
         }
 
-        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+        // 绑定事件
+        document.addEventListener('DOMContentLoaded', () => {
+            initLanguage();
+            updateTime(); // 初始化时间显示
+            setInterval(updateTime, 1000);
+        });
 
+        document.getElementById('langToggle').addEventListener('click', () => {
+            isEnglish = !isEnglish;
+            initLanguage();
+            updateTime();
+        });
+
+        // 保持原有功能
         function refreshPage() {
             location.reload();
         }
@@ -309,9 +317,6 @@
             document.getElementById('currentTime').textContent = 
                 `${isEnglish ? '⏳ ' : '🕒 '}${translations[isEnglish ? 'en' : 'zh'].timePrefix}${timeString}`;
         }
-
-        updateTime();
-        setInterval(updateTime, 1000);
     </script>
 </body>
 </html>
