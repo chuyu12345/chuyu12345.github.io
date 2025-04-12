@@ -3,145 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>我的个人网站</title>
+    <title>个人空间</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #70a1ff;
+            --primary-dark: #5c8eff;
+            --card-bg: rgba(255, 255, 255, 0.7);  /* 降低不透明度到0.7 */
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f5f5f5;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
-        }
-        .header {
-            margin-bottom: 30px;
-            width: 100%;
-            max-width: 800px;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 5px;
-            font-size: clamp(24px, 5vw, 36px);
-        }
-        .subtitle {
-            color: #666;
-            font-size: clamp(14px, 3vw, 16px);
-            margin-bottom: 20px;
-        }
-        .profile-img {
-            width: min(200px, 50vw);
-            height: min(200px, 50vw);
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        .search-container {
-            margin: 25px 0;
-            width: 100%;
-            max-width: 400px;
-        }
-        .search-box {
-            width: 100%;
-            padding: 12px 20px;
-            font-size: 16px;
-            border: 2px solid #dcdcdc;
-            border-radius: 30px;
-            outline: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .search-box:focus {
-            border-color: #70a1ff;
-            box-shadow: 0 4px 8px rgba(112, 161, 255, 0.2);
-        }
-        .search-box::placeholder {
-            color: #aaa;
-        }
-        .refresh-btn {
-            padding: 12px 24px;
-            background-color: #70a1ff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: clamp(14px, 3vw, 16px);
-            transition: all 0.3s ease;
-            margin-top: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .refresh-btn:hover {
-            background-color: #5c8eff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-        .refresh-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-        }
-        .footer {
-            margin-top: 40px;
-            color: #999;
-            font-size: 14px;
-            width: 100%;
-        }
-        .time-display {
-            margin-bottom: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            color: #666;
-        }
-        .copyright {
-            font-size: 12px;
+            line-height: 1.6;
+            background: url('https://img.picui.cn/free/2025/04/13/67fa9da69239a.png') center/cover no-repeat;
+            backdrop-filter: blur(1px);  /* 降低全局背景模糊度 */
         }
 
-        @media (max-width: 600px) {
-            body {
-                padding: 15px;
+        .profile-card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            margin: 20px;
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(3px);  /* 新增卡片局部模糊 */
+        }
+
+        /* 保持其他所有样式不变 */
+        .language-switcher {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            z-index: 10;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin: 20px 0;
+            box-shadow: 0 8px 16px rgba(112, 161, 255, 0.2);
+        }
+
+        h1 {
+            color: #2d3436;
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #636e72;
+            font-size: 1.1em;
+            margin: 10px 0 30px;
+            font-weight: 300;
+        }
+
+        .action-section {
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-container {
+            position: relative;
+            margin: 25px 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-box {
+            width: 95%;
+            padding: 15px 25px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            background: var(--card-bg);
+            text-align: center;
+        }
+
+        .search-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(112, 161, 255, 0.2);
+            outline: none;
+        }
+
+        .search-box::placeholder {
+            color: #b2bec3;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .styled-btn {
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .styled-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .styled-btn:active {
+            transform: translateY(0);
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #636e72;
+            font-size: 0.9em;
+        }
+
+        .time-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #2d3436;
+            margin: 15px 0;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-card {
+                padding: 25px;
+                width: 95%;
+                backdrop-filter: blur(2px);  /* 移动端降低模糊度 */
             }
+
             .profile-img {
-                border-width: 3px;
+                width: 140px;
+                height: 140px;
             }
-            .search-box {
-                padding: 10px 15px;
+
+            h1 {
+                font-size: 1.8em;
             }
-            .time-display {
+
+            .language-switcher {
+                top: 20px;
+                left: 20px;
+            }
+
+            .styled-btn {
+                padding: 10px 25px;
                 font-size: 14px;
             }
+
+            .search-box {
+                width: 90%;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-card {
+            animation: fadeIn 0.6s ease-out;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>欢迎来到我的个人网站</h1>
-        <p class="subtitle">welcome to my website</p>
+    <!-- 保持原有HTML结构 -->
+    <div class="language-switcher">
+        <button class="styled-btn" id="langToggle">EN</button>
+    </div>
+    
+    <div class="profile-card">
+        <h1 id="mainTitle">欢迎来到我的个人网站</h1>
+        <p class="subtitle" id="subTitle">探索我的个人空间</p>
         
-        <img src="https://img.picui.cn/free/2025/04/12/67fa8c11db1c7.jpg" alt="我的头像" class="profile-img">
+        <img src="https://img.picui.cn/free/2025/04/12/67fa8c11db1c7.jpg" alt="Profile" class="profile-img">
+        
+        <div class="action-section">
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search the web..." id="searchInput" 
+                       onkeypress="handleSearch(event)">
+            </div>
+            
+            <div class="button-group">
+                <button class="styled-btn" onclick="refreshPage()" id="refreshBtn">
+                    <span>⟳</span> Refresh
+                </button>
+            </div>
+        </div>
+        
+        <div class="time-display" id="currentTime"></div>
     </div>
-    
-    <div class="search-container">
-        <input type="text" class="search-box" placeholder="输入搜索内容..." id="searchInput" 
-               onkeypress="handleSearch(event)">
-    </div>
-    
-    <button class="refresh-btn" onclick="refreshPage()">刷新网站</button>
     
     <div class="footer">
-        <div class="time-display" id="currentTime"></div>
-        <div class="copyright">All by DeepSeek</div>
+        <div class="copyright">Crafted with ♥ by DeepSeek</div>
     </div>
     
     <script>
+        // 保持原有JavaScript功能不变
+        let isEnglish = true;
+        
+        const translations = {
+            zh: {
+                title: "欢迎来到我的个人网站",
+                subtitle: "探索我的个人空间",
+                searchPlaceholder: "输入搜索内容...",
+                refreshBtn: "⟳ 刷新页面",
+                timePrefix: "当前时间: ",
+                langBtn: "中文"
+            },
+            en: {
+                title: "Welcome to My Space",
+                subtitle: "Explore My Portfolio",
+                searchPlaceholder: "Search the web...",
+                refreshBtn: "⟳ Refresh",
+                timePrefix: "Current Time: ",
+                langBtn: "EN"
+            }
+        };
+
+        function toggleLanguage() {
+            isEnglish = !isEnglish;
+            const lang = isEnglish ? 'en' : 'zh';
+            
+            document.getElementById('mainTitle').textContent = translations[lang].title;
+            document.getElementById('subTitle').textContent = translations[lang].subtitle;
+            document.getElementById('searchInput').placeholder = translations[lang].searchPlaceholder;
+            document.getElementById('refreshBtn').innerHTML = `<span>⟳</span> ${translations[lang].refreshBtn.split(' ')[1]}`;
+            document.getElementById('langToggle').textContent = translations[lang].langBtn;
+            updateTime();
+        }
+
+        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+
         function refreshPage() {
             location.reload();
         }
-        
+
         function handleSearch(event) {
             if (event.key === 'Enter') {
                 const searchQuery = document.getElementById('searchInput').value;
@@ -150,24 +285,31 @@
                 }
             }
         }
-        
-        // 实时更新时间显示
+
         function updateTime() {
             const now = new Date();
-            const timeString = now.toLocaleString('zh-CN', {
+            const options = {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
-                hour12: false
-            }).replace(/\//g, '-');
+                hour12: !isEnglish
+            };
             
-            document.getElementById('currentTime').textContent = '当前时间: ' + timeString;
+            let timeString = now.toLocaleString(isEnglish ? 'en-US' : 'zh-CN', options)
+                           .replace(/\//g, '-')
+                           .replace(/,/g, '');
+            
+            if(isEnglish) {
+                timeString = timeString.replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
+            }
+            
+            document.getElementById('currentTime').textContent = 
+                `${isEnglish ? '⏳ ' : '🕒 '}${translations[isEnglish ? 'en' : 'zh'].timePrefix}${timeString}`;
         }
-        
-        // 初始调用并设置定时器
+
         updateTime();
         setInterval(updateTime, 1000);
     </script>
