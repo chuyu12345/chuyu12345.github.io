@@ -2,321 +2,479 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>个人空间</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Zeep 在线刷步 - Liquid Glass Ultimate</title>
     <style>
         :root {
-            --primary: #70a1ff;
-            --primary-dark: #5c8eff;
-            --card-bg: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --accent: #ff6700;
+            --font-main: -apple-system, "SF Pro Display", BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        p { margin: 0; }
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: var(--font-main);
+            background: #000; overflow-x: hidden; overflow-y: auto;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ======== 背景 ======== */
+        .bg-video {
+            position: fixed; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: 0;
+            filter: brightness(0.85) contrast(1.1);
+        }
+        .video-overlay {
+            position: fixed; inset: 0; z-index: 1;
+            background: radial-gradient(circle at 50% 30%, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.55) 100%);
+        }
+
+        /* ======== 主容器 ======== */
+        .app-container {
+            width: 90%; max-width: 400px;
+            position: relative; z-index: 10;
+            display: flex; flex-direction: column; gap: 18px;
+            padding: 20px 0;
+        }
+
+        /* ======== 标题 ======== */
+        .header { text-align: center; margin-bottom: 8px; }
+        .header h1 {
+            color: #fff; font-size: 32px; font-weight: 700;
+            letter-spacing: 6px; margin: 0;
+            text-shadow: 0 0 30px rgba(255,255,255,0.15);
+        }
+        .header .subtitle {
+            color: rgba(255,255,255,0.35); font-size: 11px;
+            letter-spacing: 3px; margin-top: 6px; text-transform: uppercase;
+        }
+
+        /* ============================================
+           核心：Apple Liquid Glass 多层架构
+           ============================================ */
+        .liquid_glass-wrapper {
+            --border-radius: 20px;
             position: relative;
-            line-height: 1.6;
-            background: url('https://img.picui.cn/free/2025/04/13/67fa9da69239a.png') center/cover no-repeat;
-            backdrop-filter: blur(1px);
-        }
-
-        .profile-card {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 600px;
-            width: 90%;
-            margin: 20px;
-            transition: transform 0.3s ease;
-            backdrop-filter: blur(3px);
-        }
-
-        .language-switcher {
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            z-index: 10;
-        }
-
-        .profile-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .profile-img {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary);
-            margin: 20px 0;
-            box-shadow: 0 8px 16px rgba(112, 161, 255, 0.2);
-        }
-
-        h1 {
-            color: #2d3436;
-            margin: 0;
-            font-size: 2.2em;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .subtitle {
-            color: #636e72;
-            font-size: 1.1em;
-            margin: 10px 0 30px;
-            font-weight: 300;
-        }
-
-        .action-section {
-            width: 100%;
-            max-width: 400px;
-            margin: 30px auto;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            background: var(--glass-bg);
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.25);
         }
 
-        .search-container {
-            position: relative;
-            margin: 25px 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
+        /* 第0层：SVG 位移折射 — 边框环带 */
+        .liquid_glass-outer {
+            backdrop-filter: url(#liquid_glass_filter);
+            -webkit-backdrop-filter: url(#liquid_glass_filter);
+            position: absolute; inset: 0; z-index: 0;
+            border-radius: var(--border-radius);
+            mask-image:
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="0" y="0" width="100%" height="100%" rx="0" ry="0" fill="white"/></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="5" y="5" width="calc(100%25 - 10px)" height="calc(100%25 - 10px)" rx="15" ry="15" fill="white"/></svg>');
+            -webkit-mask-image:
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="0" y="0" width="100%" height="100%" rx="0" ry="0" fill="white"/></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="5" y="5" width="calc(100%25 - 10px)" height="calc(100%25 - 10px)" rx="15" ry="15" fill="white"/></svg>');
+            mask-composite: exclude;
+            -webkit-mask-composite: xor;
         }
 
-        .search-box {
-            width: 95%;
-            padding: 15px 25px;
-            font-size: 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 30px;
-            transition: all 0.3s ease;
-            background: var(--card-bg);
-            text-align: center;
+        /* 第1层：磨砂模糊 + 半透明遮罩 */
+        .liquid_glass-cover {
+            backdrop-filter: blur(18px) saturate(150%);
+            -webkit-backdrop-filter: blur(18px) saturate(150%);
+            position: absolute; inset: 0; z-index: 2;
+            border-radius: var(--border-radius);
+            background: rgba(0, 0, 0, 0.12);
         }
 
-        .search-box:focus {
-            border-color: var(--primary);
-            box-shadow: 0 5px 15px rgba(112, 161, 255, 0.2);
-            outline: none;
+        /* 第2层：锐利边缘高光 */
+        .liquid_glass-sharp {
+            position: absolute; inset: 0; z-index: 3;
+            box-shadow:
+                inset 1px 1px 0px 0px rgba(255,255,255,0.45),
+                inset -1px -1px 0px 0px rgba(255,255,255,0.15);
+            border-radius: var(--border-radius);
+            pointer-events: none;
         }
 
-        .search-box::placeholder {
-            color: #b2bec3;
+        /* 第3层：漫反射光晕 */
+        .liquid_glass-reflect {
+            position: absolute; inset: 1px; z-index: 4;
+            box-shadow:
+                inset 2px 2px 8px 2px rgba(255,255,255,0.12),
+                inset -2px -2px 6px -1px rgba(255,255,255,0.08);
+            border-radius: var(--border-radius);
+            pointer-events: none;
         }
 
-        .button-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
+        /* 第4层：顶部渐变光泽 */
+        .liquid_glass-gloss {
+            position: absolute; inset: 0; z-index: 4;
+            background: linear-gradient(
+                170deg,
+                rgba(255,255,255,0.12) 0%,
+                rgba(255,255,255,0.03) 35%,
+                transparent 60%
+            );
+            border-radius: var(--border-radius);
+            pointer-events: none;
+        }
+
+        /* 内容层 */
+        .liquid_glass-content {
+            position: relative; z-index: 5;
             width: 100%;
         }
 
-        .styled-btn {
-            padding: 12px 30px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        /* ======== 输入组件 ======== */
+        .input-group { display: flex; flex-direction: column; gap: 6px; }
+        .input-group label {
+            display: flex; align-items: center; gap: 6px;
+            color: rgba(255,255,255,0.45); font-size: 10px; font-weight: 600;
+            margin-left: 16px; text-transform: uppercase; letter-spacing: 1.5px;
+        }
+        .input-group label svg { opacity: 0.5; }
+
+        input {
+            width: 100%; padding: 17px 20px; background: transparent; border: none;
+            color: #fff; font-size: 16px; outline: none; font-family: inherit;
+            letter-spacing: 0.5px;
+        }
+        input::placeholder { color: rgba(255,255,255,0.2); }
+        input:focus { /* 聚焦不做边框变化，保持纯玻璃感 */ }
+
+        /* ======== 数字输入特殊样式 ======== */
+        .step-input-wrapper {
+            display: flex; align-items: center; padding: 0 20px; gap: 12px;
+        }
+        .step-input-wrapper input {
+            padding: 17px 0; flex: 1; text-align: center;
+            font-size: 22px; font-weight: 600; letter-spacing: 2px;
+        }
+        .step-adjust {
+            width: 36px; height: 36px; border: none; border-radius: 50%;
+            background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
+            font-size: 18px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .step-adjust:active { transform: scale(0.9); background: rgba(255,255,255,0.15); }
+
+        /* ======== 提交按钮 ======== */
+        .btn-action {
+            width: 100%; border: none; background: transparent;
+            cursor: pointer; padding: 0; margin-top: 6px;
+            transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+        .btn-action:active { transform: scale(0.96); }
+        .btn-action .liquid_glass-wrapper {
+            background: rgba(255, 103, 0, 0.12);
+        }
+        .btn-action .liquid_glass-cover {
+            background: rgba(255, 103, 0, 0.08);
+        }
+        .btn-action .liquid_glass-sharp {
+            box-shadow:
+                inset 1px 1px 0px 0px rgba(255,180,120,0.4),
+                inset -1px -1px 0px 0px rgba(255,140,60,0.15);
+        }
+        .btn-label {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 18px; color: #fff; font-weight: 700; font-size: 15px;
+            letter-spacing: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+        .btn-label svg { opacity: 0.8; }
+
+        /* 按钮脉冲动画 */
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(255,103,0,0.3); }
+            70% { box-shadow: 0 0 0 12px rgba(255,103,0,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,103,0,0); }
+        }
+        .btn-action .liquid_glass-wrapper { animation: pulse-ring 3s infinite; }
+        .btn-action:hover .liquid_glass-wrapper { animation: none; }
+
+        /* ======== 状态面板 ======== */
+        .status-pane { display: none; }
+        .status-pane .liquid_glass-content {
+            padding: 16px 20px; text-align: center;
+            font-size: 13px; color: rgba(255,255,255,0.8);
+            letter-spacing: 0.5px;
+        }
+        .status-pane .liquid_glass-wrapper {
+            border-left: 3px solid rgba(255,103,0,0.4);
         }
 
-        .styled-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        /* ======== 底部导航栏（来自掘金液态玻璃原版） ======== */
+        .bottom-bar {
+            display: flex; gap: 12px; position: fixed;
+            bottom: 0; left: 0; right: 0; z-index: 20;
+            padding: 12px 16px; padding-bottom: max(12px, env(safe-area-inset-bottom));
         }
-
-        .styled-btn:active {
-            transform: translateY(0);
+        .bottom-bar .liquid_glass-wrapper {
+            --border-radius: 50px;
         }
+        .bottom-bar .icon {
+            z-index: 5; display: flex; width: 100%;
+            align-items: center; justify-content: center;
+        }
+        .bottom-bar .bar-center {
+            z-index: 5; display: flex; align-items: center;
+            width: 100%; padding: 0 20px; gap: 12px;
+        }
+        .bottom-bar .bar-center .info { margin-right: auto; color: rgba(255,255,255,0.8); }
+        .bottom-bar .bar-center .info .title { font-weight: 700; font-size: 13px; }
+        .bottom-bar .bar-center .info .sub { font-size: 10px; opacity: 0.7; }
 
+        /* ======== 页脚 ======== */
         .footer {
-            margin-top: 50px;
-            text-align: center;
-            color: #636e72;
-            font-size: 0.9em;
+            text-align: center; color: rgba(255,255,255,0.2);
+            font-size: 10px; letter-spacing: 1px; padding: 10px 0 80px;
         }
+        .footer span { color: var(--accent); cursor: pointer; text-decoration: underline; opacity: 0.6; }
 
-        .time-display {
-            font-family: 'Courier New', monospace;
-            font-size: 1.1em;
-            color: #2d3436;
-            margin: 15px 0;
-            letter-spacing: 1px;
-        }
-
-        @media (max-width: 768px) {
-            .profile-card {
-                padding: 25px;
-                width: 95%;
-                backdrop-filter: blur(2px);
-            }
-
-            .profile-img {
-                width: 140px;
-                height: 140px;
-            }
-
-            h1 {
-                font-size: 1.8em;
-            }
-
-            .language-switcher {
-                top: 20px;
-                left: 20px;
-            }
-
-            .styled-btn {
-                padding: 10px 25px;
-                font-size: 14px;
-            }
-
-            .search-box {
-                width: 90%;
-            }
-        }
-
-        @keyframes fadeIn {
+        /* ======== 加载与过渡动画 ======== */
+        @keyframes fadeUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .profile-card {
-            animation: fadeIn 0.6s ease-out;
+        .app-container > * {
+            animation: fadeUp 0.6s cubic-bezier(0.2, 0, 0.2, 1) both;
         }
+        .app-container > *:nth-child(1) { animation-delay: 0.1s; }
+        .app-container > *:nth-child(2) { animation-delay: 0.2s; }
+        .app-container > *:nth-child(3) { animation-delay: 0.3s; }
+        .app-container > *:nth-child(4) { animation-delay: 0.4s; }
+        .app-container > *:nth-child(5) { animation-delay: 0.5s; }
+        .app-container > *:nth-child(6) { animation-delay: 0.6s; }
+
+        /* 发送中旋转 */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner { display: inline-block; animation: spin 1s linear infinite; }
     </style>
 </head>
 <body>
-    <div class="language-switcher">
-        <button class="styled-btn" id="langToggle">EN</button>
+
+<!-- ====== SVG 液态玻璃滤镜 ====== -->
+<svg style="display: none">
+    <defs>
+        <!-- Apple 风格位移滤镜 -->
+        <filter id="liquid_glass_filter" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="noise" seed="3"/>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="80" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+    </defs>
+</svg>
+
+<!-- ====== 视频背景 ====== -->
+<video class="bg-video"
+       src="https://cropgif.net/videos/1775906144407-fc3b5c92-a4db-4792-b6db-582448920abe.mp4"
+       autoplay loop muted playsinline></video>
+<div class="video-overlay"></div>
+
+<!-- ====== 主界面 ====== -->
+<div class="app-container">
+
+    <div class="header">
+        <h1>在线刷步</h1>
+        <p class="subtitle">Zeep Life · Liquid Glass</p>
     </div>
-    
-    <div class="profile-card">
-        <h1 id="mainTitle">欢迎来到我的个人网站</h1>
-        <p class="subtitle" id="subTitle">探索我的个人空间</p>
-        
-        <img src="https://img.picui.cn/free/2025/04/12/67fa8c11db1c7.jpg" alt="Profile" class="profile-img">
-        
-        <div class="action-section">
-            <div class="search-container">
-                <input type="text" class="search-box" placeholder="Search the web..." id="searchInput" 
-                       onkeypress="handleSearch(event)">
-            </div>
-            
-            <div class="button-group">
-                <button class="styled-btn" onclick="refreshPage()" id="refreshBtn">
-                    <span>⟳</span> Refresh
-                </button>
+
+    <!-- 账号 -->
+    <div class="input-group">
+        <label>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
+                <path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22H4ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13Z"/>
+            </svg>
+            Cloud Profile
+        </label>
+        <div class="liquid_glass-wrapper">
+            <div class="liquid_glass-outer"></div>
+            <div class="liquid_glass-cover"></div>
+            <div class="liquid_glass-sharp"></div>
+            <div class="liquid_glass-reflect"></div>
+            <div class="liquid_glass-gloss"></div>
+            <div class="liquid_glass-content">
+                <input type="text" id="user" placeholder="手机号 / 账号" autocomplete="username">
             </div>
         </div>
-        
-        <div class="time-display" id="currentTime"></div>
     </div>
-    
+
+    <!-- 密码 -->
+    <div class="input-group">
+        <label>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
+                <path d="M18 8H20C20.5523 8 21 8.44772 21 9V21C21 21.5523 20.5523 22 20 22H4C3.44772 22 3 21.5523 3 21V9C3 8.44772 3.44772 8 4 8H6V7C6 3.68629 8.68629 1 12 1C15.3137 1 18 3.68629 18 7V8ZM11 15.7324V18H13V15.7324C13.5978 15.3866 14 14.7403 14 14C14 12.8954 13.1046 12 12 12C10.8954 12 10 12.8954 10 14C10 14.7403 10.4022 15.3866 11 15.7324ZM16 8V7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7V8H16Z"/>
+            </svg>
+            Access Key
+        </label>
+        <div class="liquid_glass-wrapper">
+            <div class="liquid_glass-outer"></div>
+            <div class="liquid_glass-cover"></div>
+            <div class="liquid_glass-sharp"></div>
+            <div class="liquid_glass-reflect"></div>
+            <div class="liquid_glass-gloss"></div>
+            <div class="liquid_glass-content">
+                <input type="password" id="pwd" placeholder="登录密码" autocomplete="current-password">
+            </div>
+        </div>
+    </div>
+
+    <!-- 步数 -->
+    <div class="input-group">
+        <label>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
+                <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"/>
+            </svg>
+            Sync Steps
+        </label>
+        <div class="liquid_glass-wrapper">
+            <div class="liquid_glass-outer"></div>
+            <div class="liquid_glass-cover"></div>
+            <div class="liquid_glass-sharp"></div>
+            <div class="liquid_glass-reflect"></div>
+            <div class="liquid_glass-gloss"></div>
+            <div class="liquid_glass-content">
+                <div class="step-input-wrapper">
+                    <button class="step-adjust" onclick="adjustStep(-1000)">−</button>
+                    <input type="number" id="step" value="31666">
+                    <button class="step-adjust" onclick="adjustStep(1000)">+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提交按钮 -->
+    <button class="btn-action" onclick="invokeSync()">
+        <div class="liquid_glass-wrapper">
+            <div class="liquid_glass-outer"></div>
+            <div class="liquid_glass-cover"></div>
+            <div class="liquid_glass-sharp"></div>
+            <div class="liquid_glass-reflect"></div>
+            <div class="liquid_glass-gloss"></div>
+            <div class="liquid_glass-content">
+                <span class="btn-label" id="btnTxt">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                        <path d="M3.5 1.34558C3.58425 1.34558 3.66714 1.36687 3.74096 1.40747L22.2034 11.5618C22.4454 11.6949 22.5337 11.9989 22.4006 12.2409C22.3549 12.3237 22.2862 12.3924 22.2034 12.4381L3.74096 22.5924C3.499 22.7255 3.19497 22.6372 3.06189 22.3953C3.02129 22.3214 3 22.2386 3 22.1543V1.84558C3 1.56944 3.22386 1.34558 3.5 1.34558ZM5 4.38249V11.0001H10V13.0001H5V19.6174L18.8499 12.0001L5 4.38249Z"/>
+                    </svg>
+                    发送同步指令
+                </span>
+            </div>
+        </div>
+    </button>
+
+    <!-- 状态面板 -->
+    <div id="statusPane" class="status-pane">
+        <div class="liquid_glass-wrapper">
+            <div class="liquid_glass-outer"></div>
+            <div class="liquid_glass-cover"></div>
+            <div class="liquid_glass-sharp"></div>
+            <div class="liquid_glass-reflect"></div>
+            <div class="liquid_glass-gloss"></div>
+            <div class="liquid_glass-content" id="statusTxt">就绪</div>
+        </div>
+    </div>
+
     <div class="footer">
-        <div class="copyright">Crafted with ♥ by DeepSeek</div>
+        ZEEP CORE V5.2 · <span onclick="window.open('http://api.tinise.cn/api/zeep','_blank')">DEBUG PROTOCOL</span>
     </div>
-    
-    <script>
-        // 修复核心：初始化状态管理
-        let isEnglish = false; // 初始状态设为中文
-        
-        const translations = {
-            zh: {
-                title: "欢迎来到我的个人网站",
-                subtitle: "探索我的个人空间",
-                searchPlaceholder: "输入搜索内容...",
-                refreshBtn: "⟳ 刷新页面",
-                timePrefix: "当前时间: ",
-                langBtn: "EN"
-            },
-            en: {
-                title: "Welcome to My Space",
-                subtitle: "Explore My Portfolio",
-                searchPlaceholder: "Search the web...",
-                refreshBtn: "⟳ Refresh",
-                timePrefix: "Current Time: ",
-                langBtn: "中文"
-            }
-        };
+</div>
 
-        // 初始化函数
-        function initLanguage() {
-            const lang = isEnglish ? 'en' : 'zh';
-            document.getElementById('mainTitle').textContent = translations[lang].title;
-            document.getElementById('subTitle').textContent = translations[lang].subtitle;
-            document.getElementById('searchInput').placeholder = translations[lang].searchPlaceholder;
-            document.getElementById('refreshBtn').innerHTML = `<span>⟳</span> ${translations[lang].refreshBtn.split(' ')[1]}`;
-            document.getElementById('langToggle').textContent = translations[lang].langBtn;
-        }
+<!-- ====== 底部导航栏（Apple Liquid Glass 风格） ====== -->
+<div class="bottom-bar">
+    <div class="liquid_glass-wrapper" style="width: 50px; height: 50px; --border-radius: 50px;">
+        <div class="liquid_glass-outer"></div>
+        <div class="liquid_glass-cover"></div>
+        <div class="liquid_glass-sharp"></div>
+        <div class="liquid_glass-reflect"></div>
+        <div class="liquid_glass-gloss"></div>
+        <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,103,0,0.8)" width="24" height="24">
+                <path d="M20 20C20 20.5523 19.5523 21 19 21H5C4.44772 21 4 20.5523 4 20V11L1 11L11.3273 1.6115C11.7087 1.26475 12.2913 1.26475 12.6727 1.6115L23 11L20 11V20ZM11 13V19H13V13H11Z"/>
+            </svg>
+        </div>
+    </div>
 
-        // 绑定事件
-        document.addEventListener('DOMContentLoaded', () => {
-            initLanguage();
-            updateTime(); // 初始化时间显示
-            setInterval(updateTime, 1000);
-        });
+    <div class="liquid_glass-wrapper" style="--border-radius: 50px; flex: 1; height: 50px;">
+        <div class="liquid_glass-outer"></div>
+        <div class="liquid_glass-cover"></div>
+        <div class="liquid_glass-sharp"></div>
+        <div class="liquid_glass-reflect"></div>
+        <div class="liquid_glass-gloss"></div>
+        <div class="bar-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,0.6)" width="20" height="20">
+                <path d="M13 1L1.5 14H11V23L22.5 10H13V1Z"/>
+            </svg>
+            <div class="info">
+                <p class="title">Zeep Sync</p>
+                <p class="sub">liquid glass engine</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)" width="20" height="20">
+                <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM11 11H7V13H11V17H13V13H17V11H13V7H11V11Z"/>
+            </svg>
+        </div>
+    </div>
 
-        document.getElementById('langToggle').addEventListener('click', () => {
-            isEnglish = !isEnglish;
-            initLanguage();
-            updateTime();
-        });
+    <div class="liquid_glass-wrapper" style="width: 50px; height: 50px; --border-radius: 50px;">
+        <div class="liquid_glass-outer"></div>
+        <div class="liquid_glass-cover"></div>
+        <div class="liquid_glass-sharp"></div>
+        <div class="liquid_glass-reflect"></div>
+        <div class="liquid_glass-gloss"></div>
+        <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,0.7)" width="22" height="22">
+                <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"/>
+            </svg>
+        </div>
+    </div>
+</div>
 
-        // 保持原有功能
-        function refreshPage() {
-            location.reload();
-        }
+<script>
+    function adjustStep(delta) {
+        const input = document.getElementById('step');
+        let val = parseInt(input.value) || 0;
+        val = Math.max(0, Math.min(99999, val + delta));
+        input.value = val;
+    }
 
-        function handleSearch(event) {
-            if (event.key === 'Enter') {
-                const searchQuery = document.getElementById('searchInput').value;
-                if (searchQuery.trim() !== '') {
-                    window.open(`https://cn.bing.com/search?q=${encodeURIComponent(searchQuery)}`, '_blank');
-                }
-            }
-        }
+    function invokeSync() {
+        const u = document.getElementById('user').value.trim();
+        const p = document.getElementById('pwd').value.trim();
+        const s = document.getElementById('step').value.trim();
+        const pane = document.getElementById('statusPane');
+        const txt = document.getElementById('statusTxt');
+        const btn = document.getElementById('btnTxt');
 
-        function updateTime() {
-            const now = new Date();
-            const options = {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: !isEnglish
-            };
-            
-            let timeString = now.toLocaleString(isEnglish ? 'en-US' : 'zh-CN', options)
-                           .replace(/\//g, '-')
-                           .replace(/,/g, '');
-            
-            if(isEnglish) {
-                timeString = timeString.replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
-            }
-            
-            document.getElementById('currentTime').textContent = 
-                `${isEnglish ? '⏳ ' : '🕒 '}${translations[isEnglish ? 'en' : 'zh'].timePrefix}${timeString}`;
-        }
-    </script>
+        if (!u || !p) { alert("请录入完整身份信息"); return; }
+
+        pane.style.display = "block";
+        pane.style.animation = "fadeUp 0.4s ease both";
+        txt.innerHTML = '<span class="spinner">⏳</span> 正在建立液态同步链路…';
+        btn.innerHTML = `
+            <svg class="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                <path d="M18.364 5.63604L16.9497 7.05025C15.683 5.7835 13.933 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12H21C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.4853 3 16.7353 4.00736 18.364 5.63604Z"/>
+            </svg>
+            TRANSMITTING…
+        `;
+
+        const api = `http://api.tinise.cn/api/zeep?user=${encodeURIComponent(u)}&pwd=${encodeURIComponent(p)}&step=${encodeURIComponent(s)}&_t=${Date.now()}`;
+        fetch(api, { mode: 'no-cors' });
+
+        setTimeout(() => {
+            txt.innerHTML = `<span style="color: #00ffcc;">✅ 物理指令下发成功。请刷新 Zeep Life。</span>`;
+            btn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                    <path d="M3.5 1.34558C3.58425 1.34558 3.66714 1.36687 3.74096 1.40747L22.2034 11.5618C22.4454 11.6949 22.5337 11.9989 22.4006 12.2409C22.3549 12.3237 22.2862 12.3924 22.2034 12.4381L3.74096 22.5924C3.499 22.7255 3.19497 22.6372 3.06189 22.3953C3.02129 22.3214 3 22.2386 3 22.1543V1.84558C3 1.56944 3.22386 1.34558 3.5 1.34558ZM5 4.38249V11.0001H10V13.0001H5V19.6174L18.8499 12.0001L5 4.38249Z"/>
+                </svg>
+                发送同步指令
+            `;
+        }, 2400);
+    }
+</script>
+
 </body>
 </html>
