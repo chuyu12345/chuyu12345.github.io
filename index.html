@@ -345,7 +345,7 @@
     </div>
 </div>
 
-<!-- 底部导航栏 (样式不变) -->
+<!-- 底部导航栏 (仅修改了文字 “Zeep Sync” → “Zepp Sync”) -->
 <div class="bottom-bar">
     <div class="liquid_glass-wrapper" style="width:50px;height:50px;--border-radius:50px;">
         <div class="liquid_glass-outer"></div>
@@ -370,7 +370,8 @@
                 <path d="M13 1L1.5 14H11V23L22.5 10H13V1Z"/>
             </svg>
             <div class="info">
-                <p class="ttl">Zeep Sync</p>
+                <!-- ★ 修改处：Zeep Sync → Zepp Sync -->
+                <p class="ttl">Zepp Sync</p>
                 <p class="sub">liquid glass engine</p>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)" width="20" height="20">
@@ -410,9 +411,7 @@ function adjustStep(d) {
 }
 
 /* =============================================
-   ★★★ 仅修改 invokeSync 函数 ★★★
-   完全采用 Image 穿透方案，解决 HTTPS 页面
-   发送 HTTP 请求的混合内容限制。
+   ★★★ invokeSync 函数 (Image穿透方案) ★★★
    其他代码、样式、结构均未改动。
    ============================================= */
 function invokeSync() {
@@ -453,7 +452,6 @@ function invokeSync() {
     };
     img.src = api;
 }
-/* ====== invokeSync 替换完成，其余部分原封不动 ====== */
 
 /* ====== 视频加载失败回退 (保留) ====== */
 document.querySelector('.bg-video').addEventListener('error', function() {
