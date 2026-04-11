@@ -3,25 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Zeep 在线刷步 - Liquid Glass Ultimate</title>
+    <title>Zeep 在线刷步 - Liquid Glass</title>
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(255,255,255,0.03);
             --accent: #ff6700;
-            --font-main: -apple-system, "SF Pro Display", BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            --font-main: -apple-system,"SF Pro Display",BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
         }
-
         * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         p { margin: 0; }
         body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: var(--font-main);
-            background: #000; overflow-x: hidden; overflow-y: auto;
+            margin: 0; padding: 0; width: 100%; min-height: 100%;
+            font-family: var(--font-main); background: #000;
+            overflow-x: hidden; overflow-y: auto;
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* ======== 背景 ======== */
+        /* ====== 背景 ====== */
         .bg-video {
             position: fixed; inset: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: 0;
@@ -32,15 +30,14 @@
             background: radial-gradient(circle at 50% 30%, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.55) 100%);
         }
 
-        /* ======== 主容器 ======== */
+        /* ====== 主容器 ====== */
         .app-container {
-            width: 90%; max-width: 400px;
-            position: relative; z-index: 10;
+            width: 90%; max-width: 400px; position: relative; z-index: 10;
             display: flex; flex-direction: column; gap: 18px;
-            padding: 20px 0;
+            padding: 40px 0 100px;
         }
 
-        /* ======== 标题 ======== */
+        /* ====== 标题 ====== */
         .header { text-align: center; margin-bottom: 8px; }
         .header h1 {
             color: #fff; font-size: 32px; font-weight: 700;
@@ -53,13 +50,11 @@
         }
 
         /* ============================================
-           核心：Apple Liquid Glass 多层架构
+           Apple Liquid Glass 五层架构
            ============================================ */
         .liquid_glass-wrapper {
             --border-radius: 20px;
-            position: relative;
-            display: flex;
-            overflow: hidden;
+            position: relative; display: flex; overflow: hidden;
             border-radius: var(--border-radius);
             background: var(--glass-bg);
             box-shadow: 0 8px 32px 0 rgba(0,0,0,0.25);
@@ -72,10 +67,10 @@
             position: absolute; inset: 0; z-index: 0;
             border-radius: var(--border-radius);
             mask-image:
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="0" y="0" width="100%" height="100%" rx="0" ry="0" fill="white"/></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="0" y="0" width="100%" height="100%" fill="white"/></svg>'),
                 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="5" y="5" width="calc(100%25 - 10px)" height="calc(100%25 - 10px)" rx="15" ry="15" fill="white"/></svg>');
             -webkit-mask-image:
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="0" y="0" width="100%" height="100%" rx="0" ry="0" fill="white"/></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="0" y="0" width="100%" height="100%" fill="white"/></svg>'),
                 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="5" y="5" width="calc(100%25 - 10px)" height="calc(100%25 - 10px)" rx="15" ry="15" fill="white"/></svg>');
             mask-composite: exclude;
             -webkit-mask-composite: xor;
@@ -87,49 +82,41 @@
             -webkit-backdrop-filter: blur(18px) saturate(150%);
             position: absolute; inset: 0; z-index: 2;
             border-radius: var(--border-radius);
-            background: rgba(0, 0, 0, 0.12);
+            background: rgba(0,0,0,0.12);
         }
 
         /* 第2层：锐利边缘高光 */
         .liquid_glass-sharp {
-            position: absolute; inset: 0; z-index: 3;
-            box-shadow:
-                inset 1px 1px 0px 0px rgba(255,255,255,0.45),
-                inset -1px -1px 0px 0px rgba(255,255,255,0.15);
+            position: absolute; inset: 0; z-index: 3; pointer-events: none;
             border-radius: var(--border-radius);
-            pointer-events: none;
+            box-shadow:
+                inset 1px 1px 0px rgba(255,255,255,0.45),
+                inset -1px -1px 0px rgba(255,255,255,0.15);
         }
 
         /* 第3层：漫反射光晕 */
         .liquid_glass-reflect {
-            position: absolute; inset: 1px; z-index: 4;
+            position: absolute; inset: 1px; z-index: 4; pointer-events: none;
+            border-radius: var(--border-radius);
             box-shadow:
                 inset 2px 2px 8px 2px rgba(255,255,255,0.12),
                 inset -2px -2px 6px -1px rgba(255,255,255,0.08);
-            border-radius: var(--border-radius);
-            pointer-events: none;
         }
 
         /* 第4层：顶部渐变光泽 */
         .liquid_glass-gloss {
-            position: absolute; inset: 0; z-index: 4;
-            background: linear-gradient(
-                170deg,
+            position: absolute; inset: 0; z-index: 4; pointer-events: none;
+            border-radius: var(--border-radius);
+            background: linear-gradient(170deg,
                 rgba(255,255,255,0.12) 0%,
                 rgba(255,255,255,0.03) 35%,
-                transparent 60%
-            );
-            border-radius: var(--border-radius);
-            pointer-events: none;
+                transparent 60%);
         }
 
         /* 内容层 */
-        .liquid_glass-content {
-            position: relative; z-index: 5;
-            width: 100%;
-        }
+        .liquid_glass-content { position: relative; z-index: 5; width: 100%; }
 
-        /* ======== 输入组件 ======== */
+        /* ====== 输入框 ====== */
         .input-group { display: flex; flex-direction: column; gap: 6px; }
         .input-group label {
             display: flex; align-items: center; gap: 6px;
@@ -137,87 +124,86 @@
             margin-left: 16px; text-transform: uppercase; letter-spacing: 1.5px;
         }
         .input-group label svg { opacity: 0.5; }
-
         input {
             width: 100%; padding: 17px 20px; background: transparent; border: none;
-            color: #fff; font-size: 16px; outline: none; font-family: inherit;
-            letter-spacing: 0.5px;
+            color: #fff; font-size: 16px; outline: none;
+            font-family: var(--font-main); letter-spacing: 0.5px;
         }
+        input[type=number] { -moz-appearance: textfield; }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
         input::placeholder { color: rgba(255,255,255,0.2); }
-        input:focus { /* 聚焦不做边框变化，保持纯玻璃感 */ }
 
-        /* ======== 数字输入特殊样式 ======== */
+        /* ====== 步数调节 ====== */
         .step-input-wrapper {
-            display: flex; align-items: center; padding: 0 20px; gap: 12px;
+            display: flex; align-items: center; padding: 0 16px; gap: 12px;
         }
         .step-input-wrapper input {
             padding: 17px 0; flex: 1; text-align: center;
-            font-size: 22px; font-weight: 600; letter-spacing: 2px;
+            font-size: 24px; font-weight: 700; letter-spacing: 3px;
         }
         .step-adjust {
             width: 36px; height: 36px; border: none; border-radius: 50%;
-            background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
-            font-size: 18px; font-weight: 600; cursor: pointer;
+            background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8);
+            font-size: 20px; line-height: 1; cursor: pointer; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
-            backdrop-filter: blur(4px);
+            transition: all 0.15s; backdrop-filter: blur(4px);
         }
-        .step-adjust:active { transform: scale(0.9); background: rgba(255,255,255,0.15); }
+        .step-adjust:active { transform: scale(0.88); background: rgba(255,255,255,0.18); }
 
-        /* ======== 提交按钮 ======== */
+        /* ====== 提交按钮 ====== */
         .btn-action {
             width: 100%; border: none; background: transparent;
-            cursor: pointer; padding: 0; margin-top: 6px;
-            transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1);
+            cursor: pointer; padding: 0; margin-top: 4px;
+            transition: transform 0.2s cubic-bezier(0.2,0,0.2,1);
         }
         .btn-action:active { transform: scale(0.96); }
-        .btn-action .liquid_glass-wrapper {
-            background: rgba(255, 103, 0, 0.12);
-        }
-        .btn-action .liquid_glass-cover {
-            background: rgba(255, 103, 0, 0.08);
-        }
+        .btn-action .liquid_glass-wrapper { background: rgba(255,103,0,0.12); }
+        .btn-action .liquid_glass-cover { background: rgba(255,103,0,0.08); }
         .btn-action .liquid_glass-sharp {
             box-shadow:
-                inset 1px 1px 0px 0px rgba(255,180,120,0.4),
-                inset -1px -1px 0px 0px rgba(255,140,60,0.15);
+                inset 1px 1px 0px rgba(255,180,120,0.5),
+                inset -1px -1px 0px rgba(255,140,60,0.15);
         }
         .btn-label {
             display: flex; align-items: center; justify-content: center; gap: 10px;
             padding: 18px; color: #fff; font-weight: 700; font-size: 15px;
             letter-spacing: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.4);
         }
-        .btn-label svg { opacity: 0.8; }
-
-        /* 按钮脉冲动画 */
         @keyframes pulse-ring {
-            0% { box-shadow: 0 0 0 0 rgba(255,103,0,0.3); }
-            70% { box-shadow: 0 0 0 12px rgba(255,103,0,0); }
+            0%   { box-shadow: 0 0 0 0 rgba(255,103,0,0.35); }
+            70%  { box-shadow: 0 0 0 14px rgba(255,103,0,0); }
             100% { box-shadow: 0 0 0 0 rgba(255,103,0,0); }
         }
         .btn-action .liquid_glass-wrapper { animation: pulse-ring 3s infinite; }
-        .btn-action:hover .liquid_glass-wrapper { animation: none; }
 
-        /* ======== 状态面板 ======== */
+        /* ====== 状态面板 + 调试控制台 ====== */
         .status-pane { display: none; }
-        .status-pane .liquid_glass-content {
+        .status-pane .liquid_glass-wrapper { border-left: 3px solid rgba(255,103,0,0.5); }
+        #statusTxt {
             padding: 16px 20px; text-align: center;
-            font-size: 13px; color: rgba(255,255,255,0.8);
-            letter-spacing: 0.5px;
+            font-size: 14px; color: rgba(255,255,255,0.85);
+            line-height: 1.7;
         }
-        .status-pane .liquid_glass-wrapper {
-            border-left: 3px solid rgba(255,103,0,0.4);
+        .debug-console {
+            background: rgba(0,0,0,0.5); margin: 0 12px 12px;
+            padding: 10px 14px; border-radius: 10px;
+            font-family: "SF Mono","Fira Code",monospace;
+            font-size: 10px; color: #00ffcc;
+            max-height: 150px; overflow-y: auto;
+            border-top: 1px solid rgba(255,103,0,0.15);
         }
+        .debug-line { margin-bottom: 3px; word-break: break-all; opacity: 0.85; }
+        .debug-err { color: #ff6b6b; }
 
-        /* ======== 底部导航栏（来自掘金液态玻璃原版） ======== */
+        /* ====== 底部导航栏 ====== */
         .bottom-bar {
             display: flex; gap: 12px; position: fixed;
             bottom: 0; left: 0; right: 0; z-index: 20;
-            padding: 12px 16px; padding-bottom: max(12px, env(safe-area-inset-bottom));
+            padding: 12px 16px;
+            padding-bottom: max(14px, env(safe-area-inset-bottom));
         }
-        .bottom-bar .liquid_glass-wrapper {
-            --border-radius: 50px;
-        }
+        .bottom-bar .liquid_glass-wrapper { --border-radius: 50px; }
         .bottom-bar .icon {
             z-index: 5; display: flex; width: 100%;
             align-items: center; justify-content: center;
@@ -226,57 +212,52 @@
             z-index: 5; display: flex; align-items: center;
             width: 100%; padding: 0 20px; gap: 12px;
         }
-        .bottom-bar .bar-center .info { margin-right: auto; color: rgba(255,255,255,0.8); }
-        .bottom-bar .bar-center .info .title { font-weight: 700; font-size: 13px; }
-        .bottom-bar .bar-center .info .sub { font-size: 10px; opacity: 0.7; }
+        .bottom-bar .bar-center .info { margin-right: auto; color: rgba(255,255,255,0.85); }
+        .bottom-bar .bar-center .info .ttl { font-weight: 700; font-size: 13px; }
+        .bottom-bar .bar-center .info .sub { font-size: 10px; opacity: 0.6; margin-top: 2px; }
 
-        /* ======== 页脚 ======== */
-        .footer {
-            text-align: center; color: rgba(255,255,255,0.2);
-            font-size: 10px; letter-spacing: 1px; padding: 10px 0 80px;
-        }
-        .footer span { color: var(--accent); cursor: pointer; text-decoration: underline; opacity: 0.6; }
-
-        /* ======== 加载与过渡动画 ======== */
+        /* ====== 入场动画 ====== */
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(22px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-        .app-container > * {
-            animation: fadeUp 0.6s cubic-bezier(0.2, 0, 0.2, 1) both;
-        }
-        .app-container > *:nth-child(1) { animation-delay: 0.1s; }
-        .app-container > *:nth-child(2) { animation-delay: 0.2s; }
-        .app-container > *:nth-child(3) { animation-delay: 0.3s; }
-        .app-container > *:nth-child(4) { animation-delay: 0.4s; }
-        .app-container > *:nth-child(5) { animation-delay: 0.5s; }
-        .app-container > *:nth-child(6) { animation-delay: 0.6s; }
+        .app-container > * { animation: fadeUp 0.55s cubic-bezier(0.2,0,0.2,1) both; }
+        .app-container > *:nth-child(1) { animation-delay: 0.08s; }
+        .app-container > *:nth-child(2) { animation-delay: 0.18s; }
+        .app-container > *:nth-child(3) { animation-delay: 0.28s; }
+        .app-container > *:nth-child(4) { animation-delay: 0.38s; }
+        .app-container > *:nth-child(5) { animation-delay: 0.48s; }
+        .app-container > *:nth-child(6) { animation-delay: 0.56s; }
 
-        /* 发送中旋转 */
         @keyframes spin { to { transform: rotate(360deg); } }
-        .spinner { display: inline-block; animation: spin 1s linear infinite; }
+        .spin { display: inline-block; animation: spin 0.9s linear infinite; }
+
+        .footer {
+            text-align: center; color: rgba(255,255,255,0.18);
+            font-size: 10px; letter-spacing: 1px; padding-top: 4px;
+        }
+        .footer span { color: var(--accent); cursor: pointer; opacity: 0.6; text-decoration: underline; }
     </style>
 </head>
 <body>
 
-<!-- ====== SVG 液态玻璃滤镜 ====== -->
-<svg style="display: none">
+<!-- SVG 液态玻璃折射滤镜 -->
+<svg style="display:none">
     <defs>
-        <!-- Apple 风格位移滤镜 -->
         <filter id="liquid_glass_filter" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox">
-            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="noise" seed="3"/>
+            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="3" result="noise"/>
             <feDisplacementMap in="SourceGraphic" in2="noise" scale="80" xChannelSelector="R" yChannelSelector="G"/>
         </filter>
     </defs>
 </svg>
 
-<!-- ====== 视频背景 ====== -->
+<!-- 视频背景 -->
 <video class="bg-video"
-       src="https://cropgif.net/videos/1775906144407-fc3b5c92-a4db-4792-b6db-582448920abe.mp4"
-       autoplay loop muted playsinline></video>
+    src="https://cropgif.net/videos/1775906144407-fc3b5c92-a4db-4792-b6db-582448920abe.mp4"
+    autoplay loop muted playsinline></video>
 <div class="video-overlay"></div>
 
-<!-- ====== 主界面 ====== -->
+<!-- 主界面 -->
 <div class="app-container">
 
     <div class="header">
@@ -290,7 +271,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
                 <path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22H4ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13Z"/>
             </svg>
-            Cloud Profile
+            Account · 账号
         </label>
         <div class="liquid_glass-wrapper">
             <div class="liquid_glass-outer"></div>
@@ -299,7 +280,7 @@
             <div class="liquid_glass-reflect"></div>
             <div class="liquid_glass-gloss"></div>
             <div class="liquid_glass-content">
-                <input type="text" id="user" placeholder="手机号 / 账号" autocomplete="username">
+                <input type="text" id="user" placeholder="手机号 / 邮箱">
             </div>
         </div>
     </div>
@@ -310,7 +291,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
                 <path d="M18 8H20C20.5523 8 21 8.44772 21 9V21C21 21.5523 20.5523 22 20 22H4C3.44772 22 3 21.5523 3 21V9C3 8.44772 3.44772 8 4 8H6V7C6 3.68629 8.68629 1 12 1C15.3137 1 18 3.68629 18 7V8ZM11 15.7324V18H13V15.7324C13.5978 15.3866 14 14.7403 14 14C14 12.8954 13.1046 12 12 12C10.8954 12 10 12.8954 10 14C10 14.7403 10.4022 15.3866 11 15.7324ZM16 8V7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7V8H16Z"/>
             </svg>
-            Access Key
+            Password · 密码
         </label>
         <div class="liquid_glass-wrapper">
             <div class="liquid_glass-outer"></div>
@@ -319,7 +300,7 @@
             <div class="liquid_glass-reflect"></div>
             <div class="liquid_glass-gloss"></div>
             <div class="liquid_glass-content">
-                <input type="password" id="pwd" placeholder="登录密码" autocomplete="current-password">
+                <input type="password" id="pwd" placeholder="登录密码">
             </div>
         </div>
     </div>
@@ -328,9 +309,9 @@
     <div class="input-group">
         <label>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
-                <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"/>
+                <path d="M13 1L1.5 14H11V23L22.5 10H13V1Z"/>
             </svg>
-            Sync Steps
+            Steps · 步数
         </label>
         <div class="liquid_glass-wrapper">
             <div class="liquid_glass-outer"></div>
@@ -349,7 +330,7 @@
     </div>
 
     <!-- 提交按钮 -->
-    <button class="btn-action" onclick="invokeSync()">
+    <button class="btn-action" id="submitBtn" onclick="invokeSync()">
         <div class="liquid_glass-wrapper">
             <div class="liquid_glass-outer"></div>
             <div class="liquid_glass-cover"></div>
@@ -359,7 +340,7 @@
             <div class="liquid_glass-content">
                 <span class="btn-label" id="btnTxt">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-                        <path d="M3.5 1.34558C3.58425 1.34558 3.66714 1.36687 3.74096 1.40747L22.2034 11.5618C22.4454 11.6949 22.5337 11.9989 22.4006 12.2409C22.3549 12.3237 22.2862 12.3924 22.2034 12.4381L3.74096 22.5924C3.499 22.7255 3.19497 22.6372 3.06189 22.3953C3.02129 22.3214 3 22.2386 3 22.1543V1.84558C3 1.56944 3.22386 1.34558 3.5 1.34558ZM5 4.38249V11.0001H10V13.0001H5V19.6174L18.8499 12.0001L5 4.38249Z"/>
+                        <path d="M3.5 1.346C3.584 1.346 3.667 1.367 3.741 1.407L22.203 11.562C22.445 11.695 22.534 11.999 22.401 12.241C22.355 12.324 22.286 12.392 22.203 12.438L3.741 22.592C3.499 22.726 3.195 22.637 3.062 22.395C3.021 22.321 3 22.239 3 22.154V1.846C3 1.569 3.224 1.346 3.5 1.346ZM5 4.383V11H10V13H5V19.617L18.85 12L5 4.383Z"/>
                     </svg>
                     发送同步指令
                 </span>
@@ -367,7 +348,7 @@
         </div>
     </button>
 
-    <!-- 状态面板 -->
+    <!-- 状态面板 + 调试控制台（保留原版能用的逻辑） -->
     <div id="statusPane" class="status-pane">
         <div class="liquid_glass-wrapper">
             <div class="liquid_glass-outer"></div>
@@ -375,7 +356,10 @@
             <div class="liquid_glass-sharp"></div>
             <div class="liquid_glass-reflect"></div>
             <div class="liquid_glass-gloss"></div>
-            <div class="liquid_glass-content" id="statusTxt">就绪</div>
+            <div class="liquid_glass-content">
+                <div id="statusTxt">就绪</div>
+                <div id="debugConsole" class="debug-console"></div>
+            </div>
         </div>
     </div>
 
@@ -384,9 +368,9 @@
     </div>
 </div>
 
-<!-- ====== 底部导航栏（Apple Liquid Glass 风格） ====== -->
+<!-- 底部导航栏 -->
 <div class="bottom-bar">
-    <div class="liquid_glass-wrapper" style="width: 50px; height: 50px; --border-radius: 50px;">
+    <div class="liquid_glass-wrapper" style="width:50px;height:50px;--border-radius:50px;">
         <div class="liquid_glass-outer"></div>
         <div class="liquid_glass-cover"></div>
         <div class="liquid_glass-sharp"></div>
@@ -398,8 +382,7 @@
             </svg>
         </div>
     </div>
-
-    <div class="liquid_glass-wrapper" style="--border-radius: 50px; flex: 1; height: 50px;">
+    <div class="liquid_glass-wrapper" style="--border-radius:50px;flex:1;height:50px;">
         <div class="liquid_glass-outer"></div>
         <div class="liquid_glass-cover"></div>
         <div class="liquid_glass-sharp"></div>
@@ -410,7 +393,7 @@
                 <path d="M13 1L1.5 14H11V23L22.5 10H13V1Z"/>
             </svg>
             <div class="info">
-                <p class="title">Zeep Sync</p>
+                <p class="ttl">Zeep Sync</p>
                 <p class="sub">liquid glass engine</p>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)" width="20" height="20">
@@ -418,8 +401,7 @@
             </svg>
         </div>
     </div>
-
-    <div class="liquid_glass-wrapper" style="width: 50px; height: 50px; --border-radius: 50px;">
+    <div class="liquid_glass-wrapper" style="width:50px;height:50px;--border-radius:50px;">
         <div class="liquid_glass-outer"></div>
         <div class="liquid_glass-cover"></div>
         <div class="liquid_glass-sharp"></div>
@@ -434,47 +416,95 @@
 </div>
 
 <script>
-    function adjustStep(delta) {
-        const input = document.getElementById('step');
-        let val = parseInt(input.value) || 0;
-        val = Math.max(0, Math.min(99999, val + delta));
-        input.value = val;
+/* ====== 调试日志 ====== */
+function log(msg, err = false) {
+    const c = document.getElementById('debugConsole');
+    const l = document.createElement('div');
+    l.className = 'debug-line' + (err ? ' debug-err' : '');
+    l.innerText = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+    c.appendChild(l);
+    c.scrollTop = c.scrollHeight;
+}
+
+/* ====== 步数调节 ====== */
+function adjustStep(d) {
+    const i = document.getElementById('step');
+    i.value = Math.max(0, Math.min(99999, (parseInt(i.value) || 0) + d));
+}
+
+/* ====== 核心同步（完全保留你能用的逻辑） ====== */
+function invokeSync() {
+    const u = document.getElementById('user').value.trim();
+    const p = document.getElementById('pwd').value.trim();
+    const s = document.getElementById('step').value.trim();
+    const pane = document.getElementById('statusPane');
+    const txt = document.getElementById('statusTxt');
+    const btn = document.getElementById('btnTxt');
+    const consoleEl = document.getElementById('debugConsole');
+
+    if (!u || !p) { alert("请填写完整信息"); return; }
+
+    pane.style.display = "block";
+    pane.style.animation = "fadeUp 0.4s ease both";
+    consoleEl.innerHTML = '';
+    txt.innerHTML = '<span class="spin">⏳</span> 链路同步中...';
+    btn.innerHTML = '<span class="spin">◌</span>&nbsp; TRANSMITTING...';
+
+    const api = 'http://api.tinise.cn/api/zeep?user=' + encodeURIComponent(u)
+              + '&pwd=' + encodeURIComponent(p)
+              + '&step=' + encodeURIComponent(s)
+              + '&_t=' + Date.now();
+
+    log("发起请求: " + api);
+    if (window.location.protocol === 'https:') {
+        log("⚠ 警告: HTTPS 环境可能拦截 HTTP 请求!", true);
     }
 
-    function invokeSync() {
-        const u = document.getElementById('user').value.trim();
-        const p = document.getElementById('pwd').value.trim();
-        const s = document.getElementById('step').value.trim();
-        const pane = document.getElementById('statusPane');
-        const txt = document.getElementById('statusTxt');
-        const btn = document.getElementById('btnTxt');
+    // ★ 双路发射：fetch(no-cors) + Image 穿透 — 这是你验证能用的方案 ★
+    fetch(api, { mode: 'no-cors' })
+        .then(function() {
+            log("Fetch 已发出 (no-cors)");
 
-        if (!u || !p) { alert("请录入完整身份信息"); return; }
+            // Image 辅助发射
+            var i = new Image();
+            i.src = api;
+            log("Image 对象辅助发射已激活");
 
-        pane.style.display = "block";
-        pane.style.animation = "fadeUp 0.4s ease both";
-        txt.innerHTML = '<span class="spinner">⏳</span> 正在建立液态同步链路…';
-        btn.innerHTML = `
-            <svg class="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-                <path d="M18.364 5.63604L16.9497 7.05025C15.683 5.7835 13.933 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12H21C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.4853 3 16.7353 4.00736 18.364 5.63604Z"/>
-            </svg>
-            TRANSMITTING…
-        `;
+            setTimeout(function() {
+                txt.innerHTML = '<span style="color:#00ffcc;font-size:16px;font-weight:600">✅ 指令发射成功</span>';
+                btn.innerHTML = '\
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">\
+                        <path d="M3.5 1.346C3.584 1.346 3.667 1.367 3.741 1.407L22.203 11.562C22.445 11.695 22.534 11.999 22.401 12.241C22.355 12.324 22.286 12.392 22.203 12.438L3.741 22.592C3.499 22.726 3.195 22.637 3.062 22.395C3.021 22.321 3 22.239 3 22.154V1.846C3 1.569 3.224 1.346 3.5 1.346ZM5 4.383V11H10V13H5V19.617L18.85 12L5 4.383Z"/>\
+                    </svg>\
+                    发送同步指令';
+                log("✓ 执行完毕，请检查 Zeep Life 应用。");
+            }, 1500);
+        })
+        .catch(function(e) {
+            log("❌ 致命错误: " + e.message, true);
+            txt.innerHTML = '<span style="color:#ff6b6b">❌ 链路故障</span>';
+            btn.innerHTML = '\
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">\
+                    <path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM11 15V17H13V15H11ZM11 7V13H13V7H11Z"/>\
+                </svg>\
+                重试';
+        });
+}
 
-        const api = `http://api.tinise.cn/api/zeep?user=${encodeURIComponent(u)}&pwd=${encodeURIComponent(p)}&step=${encodeURIComponent(s)}&_t=${Date.now()}`;
-        fetch(api, { mode: 'no-cors' });
+/* ====== 视频加载失败回退 ====== */
+document.querySelector('.bg-video').addEventListener('error', function() {
+    this.style.display = 'none';
+    document.body.style.background = 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)';
+});
 
-        setTimeout(() => {
-            txt.innerHTML = `<span style="color: #00ffcc;">✅ 物理指令下发成功。请刷新 Zeep Life。</span>`;
-            btn.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-                    <path d="M3.5 1.34558C3.58425 1.34558 3.66714 1.36687 3.74096 1.40747L22.2034 11.5618C22.4454 11.6949 22.5337 11.9989 22.4006 12.2409C22.3549 12.3237 22.2862 12.3924 22.2034 12.4381L3.74096 22.5924C3.499 22.7255 3.19497 22.6372 3.06189 22.3953C3.02129 22.3214 3 22.2386 3 22.1543V1.84558C3 1.56944 3.22386 1.34558 3.5 1.34558ZM5 4.38249V11.0001H10V13.0001H5V19.6174L18.8499 12.0001L5 4.38249Z"/>
-                </svg>
-                发送同步指令
-            `;
-        }, 2400);
-    }
+/* ====== 回车快捷提交 ====== */
+document.addEventListener('DOMContentLoaded', function() {
+    ['user', 'pwd', 'step'].forEach(function(id) {
+        document.getElementById(id).addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') invokeSync();
+        });
+    });
+});
 </script>
-
 </body>
 </html>
